@@ -55,6 +55,12 @@ app.get('/', (req, res) => {
   res.send('ServiceTrip Backend is Running 🚀');
 });
 
+setInterval(() => {
+  fetch(process.env.BACKEND_URL)
+    .then(() => console.log('Keep-alive ping successful'))
+    .catch((err) => console.error('Keep-alive failed:', err));
+}, 840000);
+
 app.use(errorHandler);
 
 const startServer = async () => {
