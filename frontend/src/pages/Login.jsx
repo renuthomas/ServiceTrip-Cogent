@@ -107,58 +107,71 @@ const Login = () => {
                 </p>
               </div>
 
-              {/* 
-                CRITICAL FIX: The 'key' prop ensures React recreates the DOM nodes 
-                when switching, clearing browser-held autofill values.
-              */}
-              <div className="space-y-4" key={isLogin ? "login-section" : "signup-section"}>
-                {isLogin ? (
-                  <>
-                    <Input label="Email" type="email" name="email" autoComplete="username" placeholder="name@company.com" onChange={handleChange} />
-                    <Input label="Password" type="password" name="password" autoComplete="current-password" placeholder="••••••••" onChange={handleChange} />
-                    <Button isLoading={loading} onClick={handleLogin}>Sign In</Button>
-                  </>
-                ) : step === 1 ? (
-                  <>
-                    <div className="space-y-1.5">
-                      <label className="text-xs font-semibold uppercase tracking-wider text-slate-500 ml-1">I am a</label>
-                      <div className="grid grid-cols-2 gap-2 p-1 bg-slate-950 rounded-2xl border border-slate-800">
-                        <button 
-                          type="button"
-                          onClick={() => setFormData({...formData, role: 'customer'})}
-                          className={`py-2 text-sm font-medium rounded-xl transition-all ${formData.role === 'customer' ? 'bg-slate-800 text-cyan-400 shadow-sm' : 'text-slate-500 hover:text-slate-300'}`}
-                        >Customer</button>
-                        <button 
-                          type="button"
-                          onClick={() => setFormData({...formData, role: 'vendor'})}
-                          className={`py-2 text-sm font-medium rounded-xl transition-all ${formData.role === 'vendor' ? 'bg-slate-800 text-cyan-400 shadow-sm' : 'text-slate-500 hover:text-slate-300'}`}
-                        >Vendor</button>
-                      </div>
-                    </div>
-                    <Input label="Full Name" type="text" name="name" autoComplete="name" placeholder="John Doe" onChange={handleChange} />
-                    <Input label="Email" type="email" name="email" autoComplete="email" placeholder="john@example.com" onChange={handleChange} />
-                    <Input label="Phone" type="tel" name="phone" autoComplete="tel" placeholder="12345 67890" onChange={handleChange} />
-                    {formData.role=="customer"?<Input label="City" type="text" name="city" autoComplete="city" placeholder="Bengaluru, Delhi" onChange={handleChange} />:null}
-                    <Input label="Password" type="password" name="password" autoComplete="new-password" minLength={8} placeholder="Min. 8 characters" onChange={handleChange} />
-                    <Button isLoading={loading} onClick={handleSignup}>Create Account</Button>
-                  </>
-                ) : (
-                  <div className="space-y-6">
-                    <div className="text-center">
-                      <p className="text-sm text-slate-400 mb-4 text-left">Verify your email address to continue.</p>
-                      <input 
-                        type="text" 
-                        maxLength={6} 
-                        className="w-full bg-slate-950 border border-slate-800 rounded-2xl py-4 text-center text-3xl font-bold tracking-[0.5em] text-cyan-400 focus:border-cyan-500 transition-all outline-none"
-                        placeholder="000000"
-                        onChange={(e) => setOtp(e.target.value)} 
-                      />
-                    </div>
-                    <Button isLoading={loading} onClick={handleVerifyOTP}>Verify & Finish</Button>
-                    <button type="button" onClick={() => setStep(1)} className="w-full text-xs text-slate-500 hover:text-cyan-400 transition-colors">Didn't receive a code? Edit details</button>
-                  </div>
-                )}
-              </div>
+             
+              <form 
+      className="space-y-4" 
+      key={isLogin ? "login-section" : "signup-section"}
+      onSubmit={(e) => {
+        e.preventDefault(); // Stop page refresh
+        if (isLogin) {
+          handleLogin();
+        } else if (step === 1) {
+          handleSignup();
+        } else {
+          handleVerifyOTP();
+        }
+      }}
+    >
+      {isLogin ? (
+        <>
+          <Input label="Email" type="email" name="email" autoComplete="username" placeholder="name@company.com" onChange={handleChange} required />
+          <Input label="Password" type="password" name="password" autoComplete="current-password" placeholder="••••••••" onChange={handleChange} required />
+          {/* Change button to type="submit" */}
+          <Button isLoading={loading} type="submit">Sign In</Button>
+        </>
+      ) : step === 1 ? (
+        <>
+          {/* ... Role selection buttons stay same as they are type="button" ... */}
+          <div className="space-y-1.5">
+            <label className="text-xs font-semibold uppercase tracking-wider text-slate-500 ml-1">I am a</label>
+            <div className="grid grid-cols-2 gap-2 p-1 bg-slate-950 rounded-2xl border border-slate-800">
+              <button 
+                type="button"
+                onClick={() => setFormData({...formData, role: 'customer'})}
+                className={`py-2 text-sm font-medium rounded-xl transition-all ${formData.role === 'customer' ? 'bg-slate-800 text-cyan-400 shadow-sm' : 'text-slate-500 hover:text-slate-300'}`}
+              >Customer</button>
+              <button 
+                type="button"
+                onClick={() => setFormData({...formData, role: 'vendor'})}
+                className={`py-2 text-sm font-medium rounded-xl transition-all ${formData.role === 'vendor' ? 'bg-slate-800 text-cyan-400 shadow-sm' : 'text-slate-500 hover:text-slate-300'}`}
+              >Vendor</button>
+            </div>
+          </div>
+          <Input label="Full Name" type="text" name="name" autoComplete="name" placeholder="John Doe" onChange={handleChange} required />
+          <Input label="Email" type="email" name="email" autoComplete="email" placeholder="john@example.com" onChange={handleChange} required />
+          <Input label="Phone" type="tel" name="phone" autoComplete="tel" placeholder="12345 67890" onChange={handleChange} required />
+          {formData.role === "customer" && <Input label="City" type="text" name="city" autoComplete="city" placeholder="Bengaluru, Delhi" onChange={handleChange} required />}
+          <Input label="Password" type="password" name="password" autoComplete="new-password" minLength={8} placeholder="Min. 8 characters" onChange={handleChange} required />
+          <Button isLoading={loading} type="submit">Create Account</Button>
+        </>
+      ) : (
+        <div className="space-y-6">
+          <div className="text-center">
+            <p className="text-sm text-slate-400 mb-4 text-left">Verify your email address to continue.</p>
+            <input 
+              type="text" 
+              maxLength={6} 
+              className="w-full bg-slate-950 border border-slate-800 rounded-2xl py-4 text-center text-3xl font-bold tracking-[0.5em] text-cyan-400 focus:border-cyan-500 transition-all outline-none"
+              placeholder="000000"
+              onChange={(e) => setOtp(e.target.value)} 
+              required
+            />
+          </div>
+          <Button isLoading={loading} type="submit">Verify & Finish</Button>
+          <button type="button" onClick={() => setStep(1)} className="w-full text-xs text-slate-500 hover:text-cyan-400 transition-colors">Didn't receive a code? Edit details</button>
+        </div>
+      )}
+    </form>
 
               <p className="text-center text-sm text-slate-500">
                 {isLogin ? "Don't have an account?" : "Already have an account?"}{' '}
@@ -217,9 +230,10 @@ const Input = ({ label, type, ...props }) => {
   );
 };
 
-const Button = ({ children, isLoading, ...props }) => (
-  <button
+const Button = ({ children, isLoading, type = "submit", ...props }) => (
+    <button
     {...props}
+    type={type}
     disabled={isLoading || props.disabled}
     className={`
       relative w-full py-4 px-6 rounded-2xl font-bold tracking-wide transition-all duration-200
