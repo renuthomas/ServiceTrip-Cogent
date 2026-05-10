@@ -23,7 +23,7 @@ const customerSignup = async (req, res) => {
 
     res.status(200).json({ message: 'OTP sent to your email. Please verify.' });
   } catch (error) {
-    console.log()
+    console.log("Error while Sign Up: "+error);
     res.status(500).json({ message: 'Server error' });
   }
 };

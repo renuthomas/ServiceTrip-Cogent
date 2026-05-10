@@ -5,23 +5,13 @@ const signupSchema = z.object({
   body: z.object({ // Added wrapper
     name: z.string().min(3, "Name must be at least 3 characters"),
     email: z.string().email("Invalid email address"),
-    phone: z.string().max(10, "Phone number must be of 10 digits"),
+    phone: z.string().length(10, "Phone number must be of 10 digits"),
     password: z.string().min(8, "Password must be at least 8 characters"),
     role: z.enum(['customer', 'vendor']),
     city: z.string().min(2, "City is required").optional(),
   })
 });
 
-// Schema for Booking Creation
-const bookingSchema = z.object({
-  body:z.object({
-    serviceId: z.string().regex(/^[0-9a-fA-F]{24}$/, "Invalid Service ID"),
-    bookingDate: z.string().refine((date) => new Date(date) > new Date(), {
-      message: "Booking date must be in the future",
-    }),
-    serviceAddress: z.string().min(10, "Please provide a more detailed address (min 10 chars)"),
-  })
-});
 
 const createBookingSchema = z.object({
   body: z.object({
@@ -66,4 +56,4 @@ const validate = (schema) => async (req, res, next) => {
     }
   };
 
-export {signupSchema,bookingSchema,createBookingSchema,updateStatusSchema,validate};
+export {signupSchema,createBookingSchema,updateStatusSchema,validate};

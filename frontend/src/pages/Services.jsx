@@ -2,8 +2,8 @@ import { useEffect, useState, useContext } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
-import { AuthContext } from '../context/AuthContext';
-import Navbar from '../components/Navbar';
+import { AuthContext } from '../context/AuthContext.jsx';
+import Navbar from '../components/Navbar.jsx';
 
 const Services = () => {
   const navigate = useNavigate();
@@ -113,7 +113,7 @@ const Services = () => {
                 <div className="mt-6 flex items-center justify-between gap-3">
                   <div className="rounded-3xl bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700">{service.location}</div>
                   <button
-                    onClick={() => setSelectedService(service)}
+                    onClick={() => {setSelectedService(service);setBookingDate('');setAddress(user?.address?.street || '');}}
                     className="rounded-full bg-cyan-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-cyan-500/20 hover:bg-cyan-500"
                   >
                     Book now
@@ -134,7 +134,8 @@ const Services = () => {
                 <h2 className="mt-2 text-3xl font-bold text-slate-900">{selectedService.title}</h2>
                 <p className="mt-2 text-slate-500">Service price ₹{selectedService.price} • {selectedService.location}</p>
               </div>
-              <button onClick={() => setSelectedService(null)} className="rounded-full bg-slate-100 px-4 py-3 text-slate-700 hover:bg-slate-200">
+              <button onClick={() => {setSelectedService(null);setBookingDate('');setAddress(user?.address?.street || '');}} 
+                className="rounded-full bg-slate-100 px-4 py-3 text-slate-700 hover:bg-slate-200">
                 Close
               </button>
             </div>
@@ -172,7 +173,9 @@ const Services = () => {
               <button onClick={bookService} className="flex-1 rounded-full bg-cyan-600 px-6 py-4 text-sm font-semibold text-white hover:bg-cyan-500">
                 Confirm Booking
               </button>
-              <button onClick={() => setSelectedService(null)} className="flex-1 rounded-full border border-slate-200 bg-white px-6 py-4 text-sm font-semibold text-slate-700 hover:bg-slate-100">
+              <button onClick={() => {setSelectedService(null);setBookingDate('');setAddress(user?.address?.street || '');}}  
+                className="flex-1 rounded-full border border-slate-200 bg-white px-6 py-4 text-sm font-semibold text-slate-700 hover:bg-slate-100"
+              >
                 Cancel
               </button>
             </div>

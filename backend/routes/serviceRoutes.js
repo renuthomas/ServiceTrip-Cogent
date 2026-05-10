@@ -23,16 +23,4 @@ router.put('/:serviceId', protect, authorizeRole(['vendor']), updateService);
 // Delete service (vendor only)
 router.delete('/:serviceId', protect, authorizeRole(['vendor']), deleteService);
 
-// Add sample services (for testing)
-router.post('/seed', async (req, res) => {
-  await Service.deleteMany();
-  const services = [
-    { title: "AC Repair Service", description: "Professional AC repair at your home", category: "Home Services", price: 899, location: "Delhi", vendorId: "67f8a1b2c3d4e5f678901234" },
-    { title: "Plumbing Service", description: "Expert plumbing solutions", category: "Home Services", price: 499, location: "Mumbai", vendorId: "67f8a1b2c3d4e5f678901234" },
-    { title: "Car Washing", description: "Premium car cleaning service", category: "Automotive", price: 599, location: "Bangalore", vendorId: "67f8a1b2c3d4e5f678901234" }
-  ];
-  await Service.insertMany(services);
-  res.json({ message: "Sample services added" });
-});
-
 export {router as serviceRouter};
